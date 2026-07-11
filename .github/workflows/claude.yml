@@ -31,7 +31,7 @@ jobs:
           fetch-depth: 1
 
       - name: Project Setup
-        run:
+        run: |
           npm run setup
           npm run dev:daemon
 
@@ -40,21 +40,9 @@ jobs:
         uses: anthropics/claude-code-action@v1
         with:
           claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
-          custom instructions:
-            The project is already set up with all dependencies installed
-            The server is already running at localhost:3000 Logs from it 
-            are being written to logs.txt. If needed you can query the db
-            with 'sqlite3' CLI. If needed, use the mcp_playwright set of
-            tools to launch a browser and interact with the app.
-
-        mcp-config:
-          "mcp servers":
-            "playwright":
-              "command": "npx"
-              "args": [ "@playwright/mcp@latest",
-                             "--allowed-origins",
-                             "localhost:3000;cdn.tailwindcss.com;esm.sh"
-                             ]
+          claude_args: |
+            --system-prompt "The project is already set up with all dependencies installed. The server is already running at localhost:3000. Logs from it are being written to logs.txt. If needed you can query the db with the 'sqlite3' CLI. If needed, use the mcp_playwright set of tools to launch a browser and interact with the app."
+            --mcp-config '{"mcpServers":{"playwright":{"command":"npx","args":["@playwright/mcp@latest","--allowed-origins","localhost:3000;cdn.tailwindcss.com;esm.sh"]}}}'
 
           # This is an optional setting that allows Claude to read CI results on PRs
           additional_permissions: |
