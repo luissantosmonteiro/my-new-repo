@@ -32,8 +32,8 @@ jobs:
 
       - name: Project Setup
         run:
-          npn run setup
-          npn run dev:deamon
+          npm run setup
+          npm run dev:daemon
 
       - name: Run Claude Code
         id: claude
